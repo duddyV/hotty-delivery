@@ -1,0 +1,50 @@
+version: '3.9'
+
+services:
+  user-service:
+    build:
+      context: . # Build context — project root folder
+      dockerfile: ./services/user-service/Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - hotty-network
+    depends_on:
+      - rabbitmq
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: hotty_delivery
+    ports:
+      - "5432:5432"
+    networks:
+      - hotty-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:4.0.2-management
+    ports:
+      - "5672:5672"
+      - "15672:15672" # RabbitMQ management UI
+    networks:
+      - hotty-network
+
+  redis:
+    image: redis:7.4-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - hotty-network
+
+networks:
+  hotty-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
