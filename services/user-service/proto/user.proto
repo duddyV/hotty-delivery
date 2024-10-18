@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package user_service;
+
+option go_package = "github.com/duddyV/user-service/proto";
+
+// User Service definition
+service UserService {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+}
+
+// Enum for user status
+enum UserStatus {
+  ACTIVE = 0;
+  INACTIVE = 1;
+  BANNED = 2;
+}
+
+// CreateUserRequest - request message for creating a new user
+message CreateUserRequest {
+  string name = 1;
+  string email = 2;
+  string password = 3;  // The raw password should be securely handled and never stored in plain text.
+}
+
+// CreateUserResponse - response message after creating a user
+message CreateUserResponse {
+  string id = 1;        // UUID
+  string name = 2;
+  string email = 3;
+  UserStatus status = 4; // Set default to ACTIVE
+  string created_at = 5; // Timestamp in ISO 8601 format
+}
+
+// GetUserRequest - request message for retrieving a user by ID
+message GetUserRequest {
+  string id = 1;        // UUID
+}
+
+// GetUserResponse - response message for retrieving a user
+message GetUserResponse {
+  string id = 1;        // UUID
+  string name = 2;
+  string email = 3;
+  UserStatus status = 4;
+  string created_at = 5;
+  string updated_at = 6; // Last updated timestamp in ISO 8601 format
+}
+
+// UpdateUserRequest - request message for updating user data
+message UpdateUserRequest {
+  string id = 1;        // UUID (Required)
+  string name = 2;      // Optional, update if provided
+  string email = 3;     // Optional, update if provided
+  string password = 4;  // Optional, user may update the password but this should not be returned
+  UserStatus status = 5; // Optional, update status
+}
+
+// UpdateUserResponse - response message after updating user data
+message UpdateUserResponse {
+  string id = 1;        // UUID
+  string name = 2;
+  string email = 3;
+  UserStatus status = 4;
+  string updated_at = 5;
+}
+
+// DeleteUserRequest - request message for deleting a user
+message DeleteUserRequest {
+  string id = 1;        // UUID
+}
+
+// DeleteUserResponse - response message after deleting a user
+message DeleteUserResponse {
+  string message = 1;   // Status message about the deletion process
+}
