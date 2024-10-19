@@ -3,6 +3,7 @@ module github.com/duddyV/user-service
 go 1.22.3
 
 require (
+	github.com/rabbitmq/amqp091-go v1.10.0
 	github.com/redis/go-redis/v9 v9.7.0
 	google.golang.org/grpc v1.67.1
 	google.golang.org/protobuf v1.35.1

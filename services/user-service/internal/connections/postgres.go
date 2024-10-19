@@ -8,9 +8,6 @@ import (
 
 func InitPostgres() (*sql.DB, error) {
 	dsn := os.Getenv("DSN")
-	if dsn == "" {
-		dsn = "postgres://postgres:postgres@postgres:5432/hotty_delivery?sslmode=disable"
-	}
 	db, err := sql.Open("pgx", dsn)
 	if err != nil {
 		return nil, err

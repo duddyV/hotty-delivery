@@ -26,11 +26,15 @@ func main() {
 	}
 	defer redisClient.Close()
 
+	// RabbitMQ connection
+	rabbitMQConn, err := connections.InitRabbitMQ()
+    if err != nil {
+        log.Fatalf("Failed to connect to RabbitMQ: %v", err)
+    }
+    defer rabbitMQConn.Close()
+
 	// gRPC setup
-	port := os.Getenv("USER_SERVICE_PORT")
-	if port == "" {
-		port = "50051"
-	}
+	port := os.Getenv("REDIS_PORT")
 
 	lis, err := net.Listen("tcp", ":"+port)
 	if err != nil {
@@ -42,6 +46,7 @@ func main() {
 	userServer := &transport.UserServer{
 		DB:    db,
 		Redis: redisClient,
+		RabbitMQ: rabbitMQConn,
 	}
 	pb.RegisterUserServiceServer(grpcServer, userServer)
 

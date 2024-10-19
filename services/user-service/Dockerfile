@@ -3,10 +3,10 @@ FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY ./services/user-service/go.mod ./services/user-service/go.sum ./
 RUN go mod download
 
-COPY . .
+COPY ./services/user-service ./
 
 RUN go build -o user-service ./cmd/app
 
